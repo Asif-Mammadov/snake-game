@@ -2,18 +2,17 @@
 
 //give a unit of space (square)
 let box = 20;
-let ymin = 2 * box;
+
 //Load canvas
 const cvs = document.getElementById("canvas");
 const ctx = cvs.getContext('2d');
 //Give relative length of canvas
-LEN = {x: cvs.width/box,y: cvs.height/box};
+LEN = {x: cvs.width/box,y: cvs.height/box };
 //Creates food location
 function newFood(){
     let food = {
         x: Math.floor(Math.random() * LEN.x) * box,
-        //y: ymin + Math.floor(Math.random() * (LEN.y - 2)) * box};
-        y: 40}
+        y: Math.floor(Math.random() * LEN.y) * box};
     return food;
 }
 
@@ -46,7 +45,6 @@ function move(){
     if(newX == food.x && newY == food.y){
         score++;
         food = newFood();
-        console.log(food)
     }else 
         snake.pop();
 
@@ -59,8 +57,8 @@ function move(){
     //Snake passes the border
     if (newX < 0) newX = (LEN.x-1) * box;
     else if(newX >= LEN.x * box) newX = 0;
-    else if(newY < ymin) newY = (LEN.y - 1) * box;
-    else if(newY >= LEN.y * box) newY = ymin;
+    else if(newY < 0) newY = (LEN.y - 1) * box;
+    else if(newY >= LEN.y * box) newY = 0;
     //Alternative
     //Game stops if snake crosses the border
     //if (newX < 0 || newX >= (LEN.x) * box || newY < 0 || newY >= (LEN.y) * box){
@@ -88,35 +86,28 @@ function draw(){
     ctx.fillStyle = "red";
     ctx.fillRect(food.x, food.y, box, box);
 
-    ctx.fillStyle = "#679b9b";
-    ctx.fillRect(0, 0, LEN.x*box, ymin);
     ctx.fillStyle = "white";
-    ctx.font = "30px Changa One";
-    ctx.fillText("Score: " + score, box, 1.5*box);
-    ctx.fillText("Speed: " + speed, 10*box, 1.5*box);
+    ctx.font = "40px Changa One";
+    ctx.fillText(score, 2*box, 1.6*box)
     move();
 }
 let score = 0;
 let direction;
 let snake = [];
 snake[0] = {x: 10*box, y: 10*box};
-speed = 10;
+speed = 3;
 
 food = newFood();
-console.log(food)
 document.addEventListener("keydown", getDirection);
 document.addEventListener("keydown", event => {
-    if (event.keyCode === 61 && speed < 100) {
-        console.log("acceleration")
-        speed++;
-        clearInterval(game)
-        game = setInterval(draw, 500/speed);
-    }else if(event.keyCode == 173 && speed > 5){
-        console.log("decceleration");
-        speed--;
-        clearInterval(game);
-        game = setInterval(draw, 1000/speed);
+    if (event.keyCode === 61) {
+            console.log("acceleration")
+            speed++;
+            clearInterval(game)
+            game = setInterval(draw, 500/speed);
     }
     
+      // do something
+    // 
 })
 game = setInterval(draw, 500/speed);
